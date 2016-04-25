@@ -1,0 +1,52 @@
+tosca_definitions_version: cloudify_dsl_1_2
+
+description: >
+  This Blueprint installs the a test website
+  on an vsphere environment.
+
+imports:
+  - http://www.getcloudify.org/spec/cloudify/3.4m4/types.yaml
+  - http://www.getcloudify.org/spec/vsphere-plugin/2.0/plugin.yaml
+  - http://www.getcloudify.org/spec/diamond-plugin/1.3.2/plugin.yaml
+  - types/vsphere-types.yaml
+
+#####################################################################################
+# inputs section allows the user to use same
+# blueprint for creating different deployments, each one
+# with its own parameters.
+# to specify deployment inputs run:
+#   - cfy deployments create -b <blueprint_id> -d <deployment_id> -i inputs.json
+#####################################################################################
+
+inputs:
+
+  template_name:
+    description: >
+      Template to clone VMs from
+
+  agent_user:
+    description: >
+      User for connecting to application VMs
+
+  management_network:
+    description: >
+      Which network to deploy the VM on
+
+  external_network:
+    description: >
+      Which network to deploy the VM on
+
+node_templates:
+  webserver_vm:
+    type: cloudify.nodes.Compute
+  webserver:
+    type: cloudify.nodes.WebServer
+    properties:
+        port: 8080
+
+output:
+    webapp_endpoint:
+        description: ip and port of the web application
+        value:
+            ip: { get_attribute: [webserver_vm, ip] }
+            port: { get_property: [webserver, port] }
