@@ -39,10 +39,12 @@ inputs:
 node_templates:
   webserver_vm:
     type: cloudify.nodes.Compute
+    properties:
+      ip: 192.168.0.11
   webserver:
     type: cloudify.nodes.WebServer
     properties:
         port: 8080
-        ip: 192.168.1.11
+
 
 
