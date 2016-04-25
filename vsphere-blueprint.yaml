@@ -44,9 +44,4 @@ node_templates:
     properties:
         port: 8080
 
-output:
-    webapp_endpoint:
-        description: ip and port of the web application
-        value:
-            ip: { get_attribute: [webserver_vm, ip] }
-            port: { get_property: [webserver, port] }
+
