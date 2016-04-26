@@ -20,10 +20,10 @@ node_types:
         default:
           connect_networks:
             - name: { get_input: management_network }
-              switch_distributed: True
+              switch_distributed: False
               management: True
             - name: { get_input: external_network }
-              switch_distributed: True
+              switch_distributed: False
               external: True
 
     interfaces:
