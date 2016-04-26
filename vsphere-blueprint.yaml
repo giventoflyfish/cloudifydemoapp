@@ -36,15 +36,40 @@ inputs:
     description: >
       Which network to deploy the VM on
 
+  webserver_port:
+    description: >
+      The HTTP web server port.
+    default: 8000
+
+  host_ip:
+    default: localhost
+
+
 node_templates:
-  webserver_vm:
+  host:
     type: cloudify.nodes.Compute
     properties:
-      ip: 192.168.0.11
-  webserver:
+      ip: { get_input: host_ip }
+      install_agent: false
+
+  http_web_server:
     type: cloudify.nodes.WebServer
     properties:
-        port: 8080
+      port: { get_input: webserver_port }
+    relationships:
+      - type: cloudify.relationships.contained_in
+        target: host
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create: install.py
+        delete: uninstall.py
+
+
+outputs:
+  http_endpoint:
+    description: Web server external endpoint
+    value: { concat: ['http://', { get_property: [ host, ip ] },
+                      ':', { get_property: [http_web_server, port] }] }
 
 
 
